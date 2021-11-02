@@ -1,20 +1,25 @@
 package org.example.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.Date;
+
+@Schema(description = "DTO задачи (ответ)")
 public class TaskResponseDto {
     private Long idTask;
     private String title;
     private String priority;
     private String author;
     private String performer;
-    private String startTime;
-    private String endTime;
+    private Date startTime;
+    private Date endTime;
     private Long idProject;
     private Long idStatus;
     private Long idRelease;
 
     public TaskResponseDto() {}
 
-    public TaskResponseDto(Long idTask, String title, String priority, String author, String performer, String startTime, String endTime, Long idProject, Long idStatus, Long idRelease) {
+    public TaskResponseDto(Long idTask, String title, String priority, String author, String performer, Date startTime, Date endTime, Long idProject, Long idStatus, Long idRelease) {
         this.idTask = idTask;
         this.title = title;
         this.priority = priority;
@@ -67,19 +72,19 @@ public class TaskResponseDto {
         this.performer = performer;
     }
 
-    public String getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

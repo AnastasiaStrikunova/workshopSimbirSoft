@@ -1,5 +1,8 @@
 package org.example.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "DTO проекта (ответ)")
 public class ProjectResponseDto {
     private Long idProject;
     private String title;

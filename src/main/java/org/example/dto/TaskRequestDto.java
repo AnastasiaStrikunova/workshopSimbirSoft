@@ -3,6 +3,7 @@ package org.example.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @NotNull
 @Schema(description = "DTO задачи (запрос)")
@@ -12,15 +13,15 @@ public class TaskRequestDto {
     private String author;
     @Schema(description = "Исполнитель", example = "Anastasia")
     private String performer;
-    private String startTime;
-    private String endTime;
+    private Date startTime;
+    private Date endTime;
     private Long idProject;
     private Long idStatus;
     private Long idRelease;
 
     public TaskRequestDto() {}
 
-    public TaskRequestDto(String title, String priority, String author, String performer, String startTime, String endTime, Long idProject, Long idStatus, Long idRelease) {
+    public TaskRequestDto(String title, String priority, String author, String performer, Date startTime, Date endTime, Long idProject, Long idStatus, Long idRelease) {
         this.title = title;
         this.priority = priority;
         this.author = author;
@@ -64,19 +65,19 @@ public class TaskRequestDto {
         this.performer = performer;
     }
 
-    public String getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 

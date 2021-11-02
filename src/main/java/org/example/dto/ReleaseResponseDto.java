@@ -1,15 +1,20 @@
 package org.example.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.Date;
+
+@Schema(description = "DTO релиза (ответ)")
 public class ReleaseResponseDto {
     private Long idRelease;
     private String version;
-    private String startTime;
-    private String endTime;
+    private Date startTime;
+    private Date endTime;
 
     public ReleaseResponseDto() {
     }
 
-    public ReleaseResponseDto(Long idRelease, String version, String startTime, String endTime) {
+    public ReleaseResponseDto(Long idRelease, String version, Date startTime, Date endTime) {
         this.idRelease = idRelease;
         this.version = version;
         this.startTime = startTime;
@@ -32,19 +37,19 @@ public class ReleaseResponseDto {
         this.version = version;
     }
 
-    public String getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 }

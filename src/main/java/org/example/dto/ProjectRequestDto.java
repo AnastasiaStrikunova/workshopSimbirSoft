@@ -1,5 +1,8 @@
 package org.example.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "DTO проекта (запрос)")
 public class ProjectRequestDto {
     private String title;
     private Boolean isComplete;

@@ -4,30 +4,32 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.TaskRequestDto;
+import org.example.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @Tag(name="Задачи", description = "Управление задачами")
-@RestController()
+@RestController
+@RequestMapping("/task")
 public class TaskController {
-    //private final TaskServiceImpl taskService;
+    //private final TaskService taskService;
 
     @Operation(summary = "Получить все задачи", description = "Позволяет получить все задачи")
-    @GetMapping("/task")
+    @GetMapping
     public ResponseEntity<Object> findAll(){
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Получить конкретную задачу")
-    @GetMapping("/task/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable@Parameter(description = "Идентификатор задачи") Long id){
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Добавить задачу")
-    @PostMapping("/task")
+    @PostMapping
     public TaskRequestDto add(@RequestBody TaskRequestDto taskRequestDto){
         /*
         TaskEntity task = new TaskEntity();
@@ -40,16 +42,14 @@ public class TaskController {
     }
 
     @Operation(summary = "Изменить задачу")
-    @PutMapping("/task/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> save(@RequestBody TaskRequestDto taskRequestDto, @PathVariable Long id){
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Удалить задачу")
-    @DeleteMapping("/task/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
-        return ResponseEntity.ok().build();
-    }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){}
 
     @ExceptionHandler(IOException.class)
     public void handler(){
