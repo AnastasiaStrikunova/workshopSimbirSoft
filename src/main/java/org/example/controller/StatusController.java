@@ -2,8 +2,6 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.example.dto.StatusRequestDto;
-import org.example.service.StatusService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,13 +25,13 @@ public class StatusController {
 
     @Operation(summary = "Добавить статус")
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody StatusRequestDto statusRequestDto){
+    public ResponseEntity<Object> add(@RequestBody String text){
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Изменить статус")
     @PutMapping("/{id}")
-    public ResponseEntity<Object> change(@PathVariable Long id, @RequestBody StatusRequestDto statusRequestDto){
+    public ResponseEntity<Object> change(@PathVariable Long id, @RequestBody String text){
         return ResponseEntity.ok().build();
     }
 

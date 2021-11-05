@@ -9,8 +9,8 @@ public class TaskResponseDto {
     private Long idTask;
     private String title;
     private String priority;
-    private String author;
-    private String performer;
+    private Long author;
+    private Long performer;
     private Date startTime;
     private Date endTime;
     private Long idProject;
@@ -19,7 +19,7 @@ public class TaskResponseDto {
 
     public TaskResponseDto() {}
 
-    public TaskResponseDto(Long idTask, String title, String priority, String author, String performer, Date startTime, Date endTime, Long idProject, Long idStatus, Long idRelease) {
+    public TaskResponseDto(Long idTask, String title, String priority, Long author, Long performer, Date startTime, Date endTime, Long idProject, Long idStatus, Long idRelease) {
         this.idTask = idTask;
         this.title = title;
         this.priority = priority;
@@ -56,19 +56,19 @@ public class TaskResponseDto {
         this.priority = priority;
     }
 
-    public String getAuthor() {
+    public Long getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Long author) {
         this.author = author;
     }
 
-    public String getPerformer() {
+    public Long getPerformer() {
         return performer;
     }
 
-    public void setPerformer(String performer) {
+    public void setPerformer(Long performer) {
         this.performer = performer;
     }
 

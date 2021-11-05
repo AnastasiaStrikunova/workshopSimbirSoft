@@ -10,9 +10,9 @@ import java.util.Date;
 public class TaskRequestDto {
     private String title;
     private String priority;
-    private String author;
+    private Long author;
     @Schema(description = "Исполнитель", example = "Anastasia")
-    private String performer;
+    private Long performer;
     private Date startTime;
     private Date endTime;
     private Long idProject;
@@ -21,7 +21,7 @@ public class TaskRequestDto {
 
     public TaskRequestDto() {}
 
-    public TaskRequestDto(String title, String priority, String author, String performer, Date startTime, Date endTime, Long idProject, Long idStatus, Long idRelease) {
+    public TaskRequestDto(String title, String priority, Long author, Long performer, Date startTime, Date endTime, Long idProject, Long idStatus, Long idRelease) {
         this.title = title;
         this.priority = priority;
         this.author = author;
@@ -49,19 +49,19 @@ public class TaskRequestDto {
         this.priority = priority;
     }
 
-    public String getAuthor() {
+    public Long getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Long author) {
         this.author = author;
     }
 
-    public String getPerformer() {
+    public Long getPerformer() {
         return performer;
     }
 
-    public void setPerformer(String performer) {
+    public void setPerformer(Long performer) {
         this.performer = performer;
     }
 

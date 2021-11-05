@@ -13,8 +13,5 @@
 *.iml
 *.ipr
 
-
 ###
 target
-# Compiled class file
-*.class
