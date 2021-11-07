@@ -1,0 +1,143 @@
+databaseChangeLog:
+  - changeSet:
+      id: 000000-create-sequences
+      author: Strikunova Anastasia
+      changes:
+        - createSequence:
+            cycle: false
+            sequenceName: seq_project
+            startValue: 1
+            incrementBy: 1
+            dataType: bigint
+            maxValue: 9223372036854775807
+            minValue: 1
+        - createSequence:
+            cycle: false
+            sequenceName: seq_release
+            startValue: 1
+            dataType: bigint
+        - createSequence:
+            cycle: false
+            sequenceName: seq_status
+            startValue: 1
+            dataType: bigint
+        - createSequence:
+            cycle: false
+            sequenceName: seq_task
+            startValue: 1
+            dataType: bigint
+        - createSequence:
+            cycle: false
+            sequenceName: seq_user
+            startValue: 1
+            dataType: bigint
+
+  - changeSet:
+      id: 000000-create-tables
+      author: Strikunova Anastasia
+      changes:
+        - createTable:
+            tableName: project
+            columns:
+              - column: { name: id_project, type: BIGINT }
+              - column: { name: title, type: VARCHAR(30) }
+              - column: { name: is_complete, type: BOOLEAN }
+              - column: { name: id_status, type: BIGINT }
+              - column: { name: id_user, type: BIGINT }
+        - createTable:
+            tableName: release
+            columns:
+              - column: { name: id_release, type: BIGINT }
+              - column: { name: version, type: VARCHAR(30) }
+              - column: { name: start_time, type: TIMESTAMP WITH TIME ZONE, defaultValueComputed: now() }
+              - column: { name: end_time, type: TIMESTAMP WITH TIME ZONE, defaultValueComputed: now() }
+        - createTable:
+            tableName: status
+            columns:
+              - column: { name: id_status, type: BIGINT }
+              - column: { name: title, type: VARCHAR(30) }
+        - createTable:
+            tableName: task
+            columns:
+              - column: { name: id_task, type: BIGINT }
+              - column: { name: title, type: VARCHAR(30) }
+              - column: { name: priority, type: VARCHAR(30) }
+              - column: { name: author, type: BIGINT }
+              - column: { name: performer, type: BIGINT }
+              - column: { name: start_time, type: TIMESTAMP WITH TIME ZONE, defaultValueComputed: now() }
+              - column: { name: end_time, type: TIMESTAMP WITH TIME ZONE, defaultValueComputed: now() }
+              - column: { name: id_project, type: BIGINT }
+              - column: { name: id_status, type: BIGINT }
+              - column: { name: id_release, type: BIGINT }
+        - createTable:
+            tableName: userr
+            columns:
+              - column: { name: id_user, type: BIGINT }
+              - column: { name: name, type: VARCHAR(30) }
+              - column: { name: priority, type: VARCHAR(30) }
+
+  - changeSet:
+      id: 000000-add-keys
+      author: Strikunova Anastasia
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE release ADD CONSTRAINT PK_release PRIMARY KEY (id_release);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE status ADD CONSTRAINT PK_status PRIMARY KEY (id_status);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE userr ADD CONSTRAINT PK_user PRIMARY KEY (id_user);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE project ADD CONSTRAINT PK_project PRIMARY KEY (id_project);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE task ADD CONSTRAINT PK_task PRIMARY KEY (id_task);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE project ADD CONSTRAINT FK_project_0 FOREIGN KEY (id_status) REFERENCES status (id_status);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE project ADD CONSTRAINT FK_project_1 FOREIGN KEY (id_user) REFERENCES userr (id_user);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE task ADD CONSTRAINT FK_task_0 FOREIGN KEY (author) REFERENCES userr (id_user);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE task ADD CONSTRAINT FK_task_1 FOREIGN KEY (performer) REFERENCES userr (id_user);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE task ADD CONSTRAINT FK_task_2 FOREIGN KEY (id_project) REFERENCES project (id_project);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE task ADD CONSTRAINT FK_task_3 FOREIGN KEY (id_status) REFERENCES status (id_status);
+        - sql:
+            dbms: postgresql
+            sql: ALTER TABLE task ADD CONSTRAINT FK_task_4 FOREIGN KEY (id_release) REFERENCES release (id_release);
+
+  - changeSet:
+      id: 000000-add-comments
+      author: Strikunova Anastasia
+      changes:
+        - sql:
+            dbms: postgresql
+            stripComments: true
+            sql: comment on table project is 'Таблица хранения проектов';
+        - sql:
+            dbms: postgresql
+            stripComments: true
+            sql: comment on table release is 'Таблица хранения релизов';
+        - sql:
+            dbms: postgresql
+            stripComments: true
+            sql: comment on table status is 'Таблица хранения статусов';
+        - sql:
+            dbms: postgresql
+            stripComments: true
+            sql: comment on table task is 'Таблица хранения задач';
+        - sql:
+            dbms: postgresql
+            stripComments: true
+            sql: comment on table userr is 'Таблица хранения пользователей';
