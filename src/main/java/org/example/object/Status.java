@@ -1,21 +1,13 @@
-package org.example.entity;
+package org.example.object;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "status")
-public class StatusEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "status_id_gen")
-    @SequenceGenerator(name = "status_id_gen", sequenceName = "seq_status", allocationSize = 1)
+public class Status {
     private Long idStatus;
-    @Column(name = "title")
     private String title;
 
-    public StatusEntity() {
+    public Status() {
     }
 
-    public StatusEntity(Long idStatus, String title) {
+    public Status(Long idStatus, String title) {
         this.idStatus = idStatus;
         this.title = title;
     }
