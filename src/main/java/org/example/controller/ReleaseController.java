@@ -25,11 +25,11 @@ public class ReleaseController {
 
     @Operation(summary = "Получить все релизы")
     @GetMapping
-    public ResponseEntity findAll(){
-        List releaseEntityList = new ArrayList(releaseService.findAll());
-        List releaseResponseDtoList = new ArrayList();
-        for (Object o : releaseEntityList) {
-            releaseResponseDtoList.add(ReleaseMapper.INSTANCE.ReleaseEntityToReleaseResponseDto((ReleaseEntity) o));
+    public ResponseEntity<List<ReleaseResponseDto>> findAll(){
+        List<ReleaseEntity> releaseEntityList = new ArrayList<>(releaseService.findAll());
+        List<ReleaseResponseDto> releaseResponseDtoList = new ArrayList<>();
+        for (ReleaseEntity releaseEntity : releaseEntityList) {
+            releaseResponseDtoList.add(ReleaseMapper.INSTANCE.ReleaseEntityToReleaseResponseDto(releaseEntity));
         }
         return ResponseEntity.ok(releaseResponseDtoList);
     }

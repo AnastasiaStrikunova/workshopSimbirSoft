@@ -49,4 +49,10 @@ public class ProjectController {
     public void delete(@PathVariable Long id){
         projectService.delete(id);
     }
+
+    @Operation(summary = "Завершить проект")
+    @PutMapping("/isComplete/{id}")
+    public ResponseEntity<ProjectResponseDto> completeProject(@PathVariable Long id){
+        return ResponseEntity.ok(projectService.completeProject(id));
+    }
 }

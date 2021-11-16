@@ -7,6 +7,7 @@ import org.example.mapper.StatusMapper;
 import org.example.repository.StatusRepository;
 import org.example.service.StatusService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,40 +20,40 @@ public class StatusServiceImpl implements StatusService {
         this.statusRepository = statusRepository;
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<Status> findAll() {
-        List statusEntityList = new ArrayList(statusRepository.findAll());
-        List statusList = new ArrayList();
-        for (Object o : statusEntityList) {
-            statusList.add(StatusMapper.INSTANCE.StatusEntityToStatus((StatusEntity) o));
+        List<StatusEntity> statusEntityList = new ArrayList<>(statusRepository.findAll());
+        List<Status> statusList = new ArrayList<>();
+        for (StatusEntity statusEntity : statusEntityList) {
+            statusList.add(StatusMapper.INSTANCE.StatusEntityToStatus(statusEntity));
         }
         return statusList;
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public Status findById(Long id) {
         return StatusMapper.INSTANCE.StatusEntityToStatus(
                 statusRepository.findById(id).orElseThrow(
                         () -> new NotFoundException(
-                                String.format("Could not find object with id = %d",id)
+                                String.format("Could not find status with id = %d",id)
                         )
                 )
         );
     }
 
-    @Override
+    @Transactional
     public Status add(Status status) {
         StatusEntity statusEntity = StatusMapper.INSTANCE.StatusToStatusEntity(status);
         statusRepository.save(statusEntity);
         return StatusMapper.INSTANCE.StatusEntityToStatus(statusEntity);
     }
 
-    @Override
+    @Transactional
     public Status change(Long id, Status status) {
         StatusEntity entity = StatusMapper.INSTANCE.StatusToStatusEntity(status);
         StatusEntity statusEntity = statusRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find object with id = %d",id)
+                        String.format("Could not find status with id = %d",id)
                 )
         );
         if (entity.getTitle() != null) statusEntity.setTitle(entity.getTitle());
@@ -60,11 +61,11 @@ public class StatusServiceImpl implements StatusService {
         return StatusMapper.INSTANCE.StatusEntityToStatus(statusEntity);
     }
 
-    @Override
+    @Transactional
     public void delete(Long id) {
         StatusEntity statusEntity = statusRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find object with id = %d",id)
+                        String.format("Could not find status with id = %d",id)
                 )
         );
         statusRepository.delete(statusEntity);
