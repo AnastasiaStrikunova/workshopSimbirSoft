@@ -11,4 +11,6 @@ public interface ProjectService {
     ProjectResponseDto add(ProjectRequestDto projectRequestDto);
     ProjectResponseDto change(Long id, ProjectRequestDto projectRequestDto);
     void delete(Long id);
+
+    ProjectResponseDto completeProject(Long id);
 }

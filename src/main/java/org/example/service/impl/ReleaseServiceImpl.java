@@ -26,7 +26,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     public ReleaseEntity findById(Long id) {
         return releaseRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find object with id = %d",id)
+                        String.format("Could not find release with id = %d",id)
                 )
         );
     }
@@ -40,7 +40,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     public ReleaseEntity change(Long id, ReleaseEntity releaseEntity) {
         ReleaseEntity entity = releaseRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find object with id = %d",id)
+                        String.format("Could not find release with id = %d",id)
                 )
         );
         if (releaseEntity.getVersion() != null) entity.setVersion(releaseEntity.getVersion());
@@ -52,7 +52,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Transactional
     public void delete(Long id) {
         releaseRepository.delete(releaseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Could not find object with id = %d",id))
+                () -> new NotFoundException(String.format("Could not find release with id = %d",id))
         ));
     }
 }

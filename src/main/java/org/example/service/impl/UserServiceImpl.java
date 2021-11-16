@@ -22,11 +22,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public List findAll() {
-        List userEntityList = new ArrayList(userRepository.findAll());
-        List userResponseDtoList = new ArrayList();
-        for (Object o : userEntityList) {
-            userResponseDtoList.add(UserMapper.INSTANCE.UserEntityToUserResponseDto((UserEntity) o));
+    public List<UserResponseDto> findAll() {
+        List<UserEntity> userEntityList = new ArrayList<>(userRepository.findAll());
+        List<UserResponseDto> userResponseDtoList = new ArrayList<>();
+        for (UserEntity userEntity : userEntityList) {
+            userResponseDtoList.add(UserMapper.INSTANCE.UserEntityToUserResponseDto(userEntity));
         }
         return userResponseDtoList;
     }
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.UserEntityToUserResponseDto(
                 userRepository.findById(id).orElseThrow(
                         () -> new NotFoundException(
-                                String.format("Could not find object with id = %d",id)
+                                String.format("Could not find user with id = %d",id)
                         )
                 )
         );
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         UserEntity entity = UserMapper.INSTANCE.UserRequestDtoToUserEntity(userRequestDto);
         UserEntity userEntity = userRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find object with id = %d",id)
+                        String.format("Could not find user with id = %d",id)
                 )
         );
         if (entity.getName() != null) userEntity.setName(entity.getName());
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find object with id = %d",id)
+                        String.format("Could not find user with id = %d",id)
                 )
         );
         userRepository.delete(userEntity);

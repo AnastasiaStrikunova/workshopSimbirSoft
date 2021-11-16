@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
+import org.example.object.Status;
 import org.example.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,5 +54,23 @@ public class TaskController {
     @ExceptionHandler(IOException.class)
     public void handler(){
         System.out.println();
+    }
+
+    @Operation(summary = "Изменить задачу по названию")
+    @PutMapping
+    public ResponseEntity<TaskResponseDto> changeByTitle(@RequestBody TaskRequestDto taskRequestDto){
+        return ResponseEntity.ok(taskService.changeByTitle(taskRequestDto));
+    }
+
+    @Operation(summary = "Изменить статус задачи")
+    @PutMapping("/{id}/status")
+    public ResponseEntity<TaskResponseDto> changeStatus(@PathVariable Long id, @RequestBody Status status){
+        return ResponseEntity.ok(taskService.changeStatus(id, status));
+    }
+
+    @Operation(summary = "Получить количество задач, не завершившихся в заданный релиз")
+    @GetMapping("/release")
+    public ResponseEntity<Integer> countAfterDateRelease(){
+        return ResponseEntity.ok(taskService.countAfterDateRelease());
     }
 }
