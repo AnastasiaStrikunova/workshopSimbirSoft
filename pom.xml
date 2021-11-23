@@ -31,12 +31,14 @@
       <artifactId>spring-boot-starter-web</artifactId>
       <version>2.5.5</version>
     </dependency>
+
     <!-- swagger-core -->
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-core</artifactId>
       <version>2.1.11</version>
     </dependency>
+
     <!-- springdoc-openapi-ui -->
     <dependency>
       <groupId>org.springdoc</groupId>
@@ -72,9 +74,19 @@
       <version>1.4.2.Final</version>
     </dependency>
 
+    <!-- spring-boot-starter-security -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <version>2.5.6</version>
+    </dependency>
 
-
-
+    <!-- jjwt -->
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>0.9.1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -138,5 +150,15 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>9</source>
+          <target>9</target>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>

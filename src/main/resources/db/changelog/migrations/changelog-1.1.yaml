@@ -1,0 +1,24 @@
+databaseChangeLog:
+- changeSet:
+    id: 000001-create-tables
+    author: Strikunova Anastasia
+    changes:
+      - createTable:
+          tableName: users
+          columns:
+            - column: { name: id_users, type: BIGINT }
+            - column: { name: email, type: VARCHAR(255) }
+            - column: { name: first_name, type: VARCHAR(50) }
+            - column: { name: last_name, type: VARCHAR(100) }
+            - column: { name: password, type: VARCHAR(255) }
+            - column: { name: role, type: VARCHAR(20) }
+            - column: { name: status, type: VARCHAR(20) }
+
+- changeSet:
+    id: 000001-add-comments
+    author: Strikunova Anastasia
+    changes:
+      - sql:
+          dbms: postgresql
+          stripComments: true
+          sql: comment on table users is 'Таблица хранения пользователей для аутентификации';

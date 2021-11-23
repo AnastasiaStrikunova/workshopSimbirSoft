@@ -8,6 +8,7 @@ import org.example.dto.TaskResponseDto;
 import org.example.object.Status;
 import org.example.service.TaskService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -72,5 +73,11 @@ public class TaskController {
     @GetMapping("/release")
     public ResponseEntity<Integer> countAfterDateRelease(){
         return ResponseEntity.ok(taskService.countAfterDateRelease());
+    }
+
+    @Operation(summary = "Поиск задач по фильтрам")
+    @PutMapping("/filter")
+    public ResponseEntity<List<TaskResponseDto>> findByFilter(@RequestBody TaskRequestDto taskRequestDto){
+        return ResponseEntity.ok(taskService.findByFilter(taskRequestDto));
     }
 }

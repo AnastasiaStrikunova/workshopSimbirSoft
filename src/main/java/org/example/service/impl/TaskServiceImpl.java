@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static org.example.specification.TaskSpecification.*;
+
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
@@ -160,6 +162,25 @@ public class TaskServiceImpl implements TaskService {
             }
         }
         return count;
+    }
+
+    @Transactional(readOnly = true)
+    public List<TaskResponseDto> findByFilter(TaskRequestDto taskRequestDto) {
+        List<TaskEntity> taskEntityList = new ArrayList<>(taskRepository.findAll(filterByTitle(taskRequestDto.getTitle())
+                .or(filterByPriority(taskRequestDto.getPriority()))
+                .or(filterByAuthor(taskRequestDto.getAuthor()))
+                .or(filterByPerformer(taskRequestDto.getPerformer()))
+                .or(filterByStartTime(taskRequestDto.getStartTime()))
+                .or(filterByEndTime(taskRequestDto.getEndTime()))
+                .or(filterByIdProject(taskRequestDto.getIdProject()))
+                .or(filterByIdStatus(taskRequestDto.getIdStatus()))
+                .or(filterByIdRelease(taskRequestDto.getIdRelease()))
+        ));
+        List<TaskResponseDto> taskResponseDtoList = new ArrayList<>();
+        for (TaskEntity taskEntity : taskEntityList) {
+            taskResponseDtoList.add(TaskMapper.INSTANCE.TaskEntityToTaskResponseDto(taskEntity));
+        }
+        return taskResponseDtoList;
     }
 
     private TaskEntity setFieldsTaskEntity(TaskEntity updatedEntity, TaskEntity sourceTaskEntity){
