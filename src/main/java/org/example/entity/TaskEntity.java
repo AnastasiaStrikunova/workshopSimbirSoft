@@ -14,35 +14,40 @@ public class TaskEntity {
     private String title;
     @Column(name = "priority")
     private String priority;
-    @Column(name = "author")
-    private Long author;
-    @Column(name = "performer")
-    private Long performer;
+    @OneToOne
+    @JoinColumn(name = "author")
+    private UserEntity authorEntity;
+    @OneToOne
+    @JoinColumn(name = "performer")
+    private UserEntity performerEntity;
     @Column(name = "start_time")
     private Date startTime;
     @Column(name = "end_time")
     private Date endTime;
-    @Column(name = "id_project")
-    private Long idProject;
-    @Column(name = "id_status")
-    private Long idStatus;
-    @Column(name = "id_release")
-    private Long idRelease;
+    @OneToOne
+    @JoinColumn(name = "id_project")
+    private ProjectEntity projectEntity;
+    @OneToOne
+    @JoinColumn(name = "id_status")
+    private StatusEntity statusEntity;
+    @OneToOne
+    @JoinColumn(name = "id_release")
+    private ReleaseEntity releaseEntity;
 
     public TaskEntity() {
     }
 
-    public TaskEntity(Long idTask, String title, String priority, Long author, Long performer, Date startTime, Date endTime, Long idProject, Long idStatus, Long idRelease) {
+    public TaskEntity(Long idTask, String title, String priority, UserEntity authorEntity, UserEntity performerEntity, Date startTime, Date endTime, ProjectEntity projectEntity, StatusEntity statusEntity, ReleaseEntity releaseEntity) {
         this.idTask = idTask;
         this.title = title;
         this.priority = priority;
-        this.author = author;
-        this.performer = performer;
+        this.authorEntity = authorEntity;
+        this.performerEntity = performerEntity;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.idProject = idProject;
-        this.idStatus = idStatus;
-        this.idRelease = idRelease;
+        this.projectEntity = projectEntity;
+        this.statusEntity = statusEntity;
+        this.releaseEntity = releaseEntity;
     }
 
     public Long getIdTask() {
@@ -69,20 +74,20 @@ public class TaskEntity {
         this.priority = priority;
     }
 
-    public Long getAuthor() {
-        return author;
+    public UserEntity getAuthorEntity() {
+        return authorEntity;
     }
 
-    public void setAuthor(Long author) {
-        this.author = author;
+    public void setAuthorEntity(UserEntity authorEntity) {
+        this.authorEntity = authorEntity;
     }
 
-    public Long getPerformer() {
-        return performer;
+    public UserEntity getPerformerEntity() {
+        return performerEntity;
     }
 
-    public void setPerformer(Long performer) {
-        this.performer = performer;
+    public void setPerformerEntity(UserEntity performerEntity) {
+        this.performerEntity = performerEntity;
     }
 
     public Date getStartTime() {
@@ -101,27 +106,27 @@ public class TaskEntity {
         this.endTime = endTime;
     }
 
-    public Long getIdProject() {
-        return idProject;
+    public ProjectEntity getProjectEntity() {
+        return projectEntity;
     }
 
-    public void setIdProject(Long idProject) {
-        this.idProject = idProject;
+    public void setProjectEntity(ProjectEntity projectEntity) {
+        this.projectEntity = projectEntity;
     }
 
-    public Long getIdStatus() {
-        return idStatus;
+    public StatusEntity getStatusEntity() {
+        return statusEntity;
     }
 
-    public void setIdStatus(Long idStatus) {
-        this.idStatus = idStatus;
+    public void setStatusEntity(StatusEntity statusEntity) {
+        this.statusEntity = statusEntity;
     }
 
-    public Long getIdRelease() {
-        return idRelease;
+    public ReleaseEntity getReleaseEntity() {
+        return releaseEntity;
     }
 
-    public void setIdRelease(Long idRelease) {
-        this.idRelease = idRelease;
+    public void setReleaseEntity(ReleaseEntity releaseEntity) {
+        this.releaseEntity = releaseEntity;
     }
 }

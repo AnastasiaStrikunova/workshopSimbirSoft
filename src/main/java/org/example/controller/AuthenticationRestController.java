@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.User;
+import org.example.security.entity.User;
 import org.example.dto.AuthenticationRequestDto;
 import org.example.repository.UsersRepository;
 import org.example.security.JwtTokenProvider;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationRestController {
     private final AuthenticationManager authenticationManager;
     private final UsersRepository usersRepository;

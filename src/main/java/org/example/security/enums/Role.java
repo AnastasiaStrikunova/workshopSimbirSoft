@@ -1,5 +1,6 @@
-package org.example;
+package org.example.security.enums;
 
+import org.example.security.enums.Permission;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;

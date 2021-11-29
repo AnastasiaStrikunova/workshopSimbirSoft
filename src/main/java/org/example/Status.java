@@ -1,5 +1,7 @@
 package org.example;
 
 public enum Status {
-    ACTIVE, BANNED
+    BACKLOG,
+    IN_PROGRESS,
+    DONE
 }

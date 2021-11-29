@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import org.example.Status;
 import org.example.dto.ProjectRequestDto;
 import org.example.dto.ProjectResponseDto;
 import org.example.entity.ProjectEntity;
@@ -8,108 +9,110 @@ import org.example.exception.NotFoundException;
 import org.example.mapper.ProjectMapper;
 import org.example.repository.ProjectRepository;
 import org.example.service.ProjectService;
-import org.example.service.StatusService;
 import org.example.service.TaskService;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.stream.Stream;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
 
     private final TaskService taskService;
-    private final StatusService statusService;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, StatusService statusService) {
+    private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
+
+    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService) {
         this.projectRepository = projectRepository;
         this.taskService = taskService;
-        this.statusService = statusService;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<ProjectResponseDto> findAll() {
         List<ProjectEntity> projectEntityList = new ArrayList<>(projectRepository.findAll());
         List<ProjectResponseDto> projectResponseDtoList = new ArrayList<>();
-        for (ProjectEntity projectEntity : projectEntityList) {
-            projectResponseDtoList.add(ProjectMapper.INSTANCE.ProjectEntityToProjectResponseDto(projectEntity));
-        }
+        Stream<ProjectEntity> stream = projectEntityList.stream();
+        stream.forEach(projectEntity -> projectResponseDtoList.add(projectMapper.ProjectEntityToProjectResponseDto(projectEntity)));
         return projectResponseDtoList;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public ProjectResponseDto findById(Long id) {
-        return ProjectMapper.INSTANCE.ProjectEntityToProjectResponseDto(
+        return projectMapper.ProjectEntityToProjectResponseDto(
                 projectRepository.findById(id).orElseThrow(
                         () -> new NotFoundException(
-                                String.format("Could not find project with id = %d",id)
+                                String.format("Could not find project with id = %d", id)
                         )
                 )
         );
     }
 
+    @Override
     @Transactional
     public ProjectResponseDto add(ProjectRequestDto projectRequestDto) {
-        ProjectEntity projectEntity = ProjectMapper.INSTANCE.ProjectRequestDtoToProjectEntity(projectRequestDto);
+        ProjectEntity projectEntity = projectMapper.ProjectRequestDtoToProjectEntity(projectRequestDto);
         projectRepository.save(projectEntity);
-        return ProjectMapper.INSTANCE.ProjectEntityToProjectResponseDto(projectEntity);
+        return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
     }
 
+    @Override
     @Transactional
     public ProjectResponseDto change(Long id, ProjectRequestDto projectRequestDto) {
-        ProjectEntity entity = ProjectMapper.INSTANCE.ProjectRequestDtoToProjectEntity(projectRequestDto);
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find project with id = %d",id)
+                        String.format("Could not find project with id = %d", id)
                 )
         );
-        if (entity.getTitle() != null) projectEntity.setTitle(entity.getTitle());
-        if (entity.getComplete() != null) projectEntity.setComplete(entity.getComplete());
-        if (entity.getIdStatus() != null) projectEntity.setIdStatus(entity.getIdStatus());
-        if (entity.getIdUser() != null) projectEntity.setIdUser(entity.getIdUser());
-        projectRepository.save(projectEntity);
-        return ProjectMapper.INSTANCE.ProjectEntityToProjectResponseDto(projectEntity);
+        if (projectRequestDto.getTitle() != null) projectEntity.setTitle(projectRequestDto.getTitle());
+        if (projectRequestDto.getComplete() != null) projectEntity.setComplete(projectRequestDto.getComplete());
+        if (projectRequestDto.getStatusEntity() != null) projectEntity.setStatusEntity(projectRequestDto.getStatusEntity());
+        if (projectRequestDto.getUserEntity() != null) projectEntity.setUserEntity(projectRequestDto.getUserEntity());
+        return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
     }
 
+    @Override
     @Transactional
     public void delete(Long id) {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find project with id = %d",id)
+                        String.format("Could not find project with id = %d", id)
                 )
         );
         projectRepository.delete(projectEntity);
     }
 
+    @Override
     @Transactional
     public ProjectResponseDto completeProject(Long id) {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find project with id = %d",id)
+                        String.format("Could not find project with id = %d", id)
                 )
         );
         List<TaskEntity> taskEntityList = taskService.findAllByIdProject(id);
-        String titleStatus;
         for (TaskEntity taskEntity : taskEntityList) {
-            if (taskEntity.getIdStatus() != null) {
-                titleStatus = (statusService.findById(taskEntity.getIdStatus())).getTitle();
-                if (!titleStatus.toLowerCase(Locale.ROOT).equals("done")) {
-                    throw new NotFoundException(
-                            "The project cannot be completed because it has unfinished tasks"
-                    );
-                }
-            } else {
-                throw new NotFoundException(
-                        "The task has no status assigned"
-                );
-            }
+            checkTaskStatus(taskEntity);
         }
         projectEntity.setComplete(true);
-        projectRepository.save(projectEntity);
-        return ProjectMapper.INSTANCE.ProjectEntityToProjectResponseDto(projectEntity);
+        return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
+    }
+
+    private void checkTaskStatus(TaskEntity taskEntity) {
+        if (taskEntity.getStatusEntity() == null) {
+            throw new NotFoundException(
+                    "The task has no status assigned"
+            );
+        } else if (!taskEntity.getStatusEntity().getTitle().equalsIgnoreCase(Status.DONE.toString())) {
+            throw new NotFoundException(
+                    "The project cannot be completed because it has unfinished tasks"
+            );
+        }
     }
 
 }

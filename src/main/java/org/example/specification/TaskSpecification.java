@@ -1,6 +1,6 @@
 package org.example.specification;
 
-import org.example.entity.TaskEntity;
+import org.example.entity.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Date;
@@ -12,11 +12,11 @@ public class TaskSpecification {
     public static Specification<TaskEntity> filterByPriority(String priority){
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("priority"), priority);
     }
-    public static Specification<TaskEntity> filterByAuthor(Long author){
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("author"), author));
+    public static Specification<TaskEntity> filterByAuthor(Long authorId){
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("authorEntity").get("idUser"), authorId));
     }
-    public static Specification<TaskEntity> filterByPerformer(Long performer){
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("performer"), performer);
+    public static Specification<TaskEntity> filterByPerformer(Long performerId){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("performerEntity").get("idUser"), performerId);
     }
     public static Specification<TaskEntity> filterByStartTime(Date startTime){
         return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("startTime"), startTime));
@@ -24,13 +24,13 @@ public class TaskSpecification {
     public static Specification<TaskEntity> filterByEndTime(Date endTime){
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("endTime"), endTime);
     }
-    public static Specification<TaskEntity> filterByIdProject(Long idProject){
-        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("idProject"), idProject));
+    public static Specification<TaskEntity> filterByIdProject(Long projectId){
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("projectEntity").get("idProject"), projectId));
     }
-    public static Specification<TaskEntity> filterByIdStatus(Long idStatus){
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("idStatus"), idStatus);
+    public static Specification<TaskEntity> filterByIdStatus(Long statusId){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("statusEntity").get("idStatus"), statusId);
     }
-    public static Specification<TaskEntity> filterByIdRelease(Long idRelease){
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("idRelease"), idRelease);
+    public static Specification<TaskEntity> filterByIdRelease(Long releaseId){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("releaseEntity").get("idRelease"), releaseId);
     }
 }

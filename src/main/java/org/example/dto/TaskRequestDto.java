@@ -1,6 +1,10 @@
 package org.example.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.example.entity.ProjectEntity;
+import org.example.entity.ReleaseEntity;
+import org.example.entity.StatusEntity;
+import org.example.entity.UserEntity;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -10,27 +14,27 @@ import java.util.Date;
 public class TaskRequestDto {
     private String title;
     private String priority;
-    private Long author;
+    private UserEntity authorEntity;
     @Schema(description = "Исполнитель", example = "Anastasia")
-    private Long performer;
+    private UserEntity performerEntity;
     private Date startTime;
     private Date endTime;
-    private Long idProject;
-    private Long idStatus;
-    private Long idRelease;
+    private ProjectEntity projectEntity;
+    private StatusEntity statusEntity;
+    private ReleaseEntity releaseEntity;
 
     public TaskRequestDto() {}
 
-    public TaskRequestDto(String title, String priority, Long author, Long performer, Date startTime, Date endTime, Long idProject, Long idStatus, Long idRelease) {
+    public TaskRequestDto(String title, String priority, UserEntity authorEntity, UserEntity performerEntity, Date startTime, Date endTime, ProjectEntity projectEntity, StatusEntity statusEntity, ReleaseEntity releaseEntity) {
         this.title = title;
         this.priority = priority;
-        this.author = author;
-        this.performer = performer;
+        this.authorEntity = authorEntity;
+        this.performerEntity = performerEntity;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.idProject = idProject;
-        this.idStatus = idStatus;
-        this.idRelease = idRelease;
+        this.projectEntity = projectEntity;
+        this.statusEntity = statusEntity;
+        this.releaseEntity = releaseEntity;
     }
 
     public String getTitle() {
@@ -49,20 +53,20 @@ public class TaskRequestDto {
         this.priority = priority;
     }
 
-    public Long getAuthor() {
-        return author;
+    public UserEntity getAuthorEntity() {
+        return authorEntity;
     }
 
-    public void setAuthor(Long author) {
-        this.author = author;
+    public void setAuthorEntity(UserEntity authorEntity) {
+        this.authorEntity = authorEntity;
     }
 
-    public Long getPerformer() {
-        return performer;
+    public UserEntity getPerformerEntity() {
+        return performerEntity;
     }
 
-    public void setPerformer(Long performer) {
-        this.performer = performer;
+    public void setPerformerEntity(UserEntity performerEntity) {
+        this.performerEntity = performerEntity;
     }
 
     public Date getStartTime() {
@@ -81,27 +85,27 @@ public class TaskRequestDto {
         this.endTime = endTime;
     }
 
-    public Long getIdProject() {
-        return idProject;
+    public ProjectEntity getProjectEntity() {
+        return projectEntity;
     }
 
-    public void setIdProject(Long idProject) {
-        this.idProject = idProject;
+    public void setProjectEntity(ProjectEntity projectEntity) {
+        this.projectEntity = projectEntity;
     }
 
-    public Long getIdStatus() {
-        return idStatus;
+    public StatusEntity getStatusEntity() {
+        return statusEntity;
     }
 
-    public void setIdStatus(Long idStatus) {
-        this.idStatus = idStatus;
+    public void setStatusEntity(StatusEntity statusEntity) {
+        this.statusEntity = statusEntity;
     }
 
-    public Long getIdRelease() {
-        return idRelease;
+    public ReleaseEntity getReleaseEntity() {
+        return releaseEntity;
     }
 
-    public void setIdRelease(Long idRelease) {
-        this.idRelease = idRelease;
+    public void setReleaseEntity(ReleaseEntity releaseEntity) {
+        this.releaseEntity = releaseEntity;
     }
 }

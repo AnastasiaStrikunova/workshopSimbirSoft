@@ -1,7 +1,7 @@
 package org.example.security;
 
-import org.example.Status;
-import org.example.User;
+import org.example.security.enums.UserStatus;
+import org.example.security.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -68,10 +68,10 @@ public class SecurityUser implements UserDetails {
     public static UserDetails fromUser(User user){
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
+                user.getStatus().equals(UserStatus.ACTIVE),
                 user.getRole().getAuthorities()
         );
     }

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.security.enums;
 
 public enum Permission {
     DEVELOPERS_READ("developers:read"),

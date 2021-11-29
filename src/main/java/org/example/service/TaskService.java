@@ -3,8 +3,10 @@ package org.example.service;
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
 import org.example.entity.TaskEntity;
-import org.example.object.Status;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -18,18 +20,12 @@ public interface TaskService {
     TaskResponseDto change(Long id, TaskRequestDto taskRequestDto);
     void delete(Long id);
 
-    /** Изменяет задачу, находит по названию
-     * @param taskRequestDto  ДТО задачи
-     * @return <code>TaskResponseDto</code>
-     */
-    TaskResponseDto changeByTitle(TaskRequestDto taskRequestDto);
-
     /** Изменяет статус задачи
      * @param id айди задачи
-     * @param status  тело статуса
+     * @param taskRequestDto  тело задачи
      * @return <code>TaskResponseDto</code>
      */
-    TaskResponseDto changeStatus(Long id, Status status);
+    TaskResponseDto changeStatus(Long id, TaskRequestDto taskRequestDto);
 
     /** Возвращает все задачи заданного проекта
      * @param id айди проекта
@@ -40,11 +36,13 @@ public interface TaskService {
     /** Возвращает количество задач, не завершившихся в заданный релиз
      * @return <code>Integer</code>
      */
-    Integer countAfterDateRelease();
+    Integer countAfterDateAssignedRelease(Long id);
 
     /** Поиск задач по фильтрам
      * @param taskRequestDto ДТО задачи
      * @return <code>List</code><<code>TaskResponseDto</code>>
      */
     List<TaskResponseDto> findByFilter(TaskRequestDto taskRequestDto);
+
+    TaskResponseDto readFile(MultipartFile multipartFile) throws IOException, ParseException;
 }

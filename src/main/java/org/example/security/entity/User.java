@@ -1,4 +1,7 @@
-package org.example;
+package org.example.security.entity;
+
+import org.example.security.enums.Role;
+import org.example.security.enums.UserStatus;
 
 import javax.persistence.*;
 
@@ -15,12 +18,12 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Role role;
     @Enumerated(value = EnumType.STRING)
-    private Status status;
+    private UserStatus status;
 
     public User() {
     }
 
-    public User(Long idUsers, String email, String firstName, String lastName, String password, Role role, Status status) {
+    public User(Long idUsers, String email, String firstName, String lastName, String password, Role role, UserStatus status) {
         this.idUsers = idUsers;
         this.email = email;
         this.firstName = firstName;
@@ -78,11 +81,11 @@ public class User {
         this.role = role;
     }
 
-    public Status getStatus() {
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
 }
