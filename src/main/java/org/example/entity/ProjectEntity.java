@@ -14,20 +14,22 @@ public class ProjectEntity {
     private String title;
     @Column(name = "is_complete")
     private Boolean isComplete;
-    @Column(name = "id_status")
-    private Long idStatus;
-    @Column(name = "id_user")
-    private Long idUser;
+    @OneToOne
+    @JoinColumn(name = "id_status")
+    private StatusEntity statusEntity;
+    @OneToOne
+    @JoinColumn(name = "id_user")
+    private UserEntity userEntity;
 
     public ProjectEntity() {
     }
 
-    public ProjectEntity(Long idProject, String title, Boolean isComplete, Long idStatus, Long idUser) {
+    public ProjectEntity(Long idProject, String title, Boolean isComplete, StatusEntity statusEntity, UserEntity userEntity) {
         this.idProject = idProject;
         this.title = title;
         this.isComplete = isComplete;
-        this.idStatus = idStatus;
-        this.idUser = idUser;
+        this.statusEntity = statusEntity;
+        this.userEntity = userEntity;
     }
 
     public Long getIdProject() {
@@ -54,19 +56,19 @@ public class ProjectEntity {
         isComplete = complete;
     }
 
-    public Long getIdStatus() {
-        return idStatus;
+    public StatusEntity getStatusEntity() {
+        return statusEntity;
     }
 
-    public void setIdStatus(Long idStatus) {
-        this.idStatus = idStatus;
+    public void setStatusEntity(StatusEntity statusEntity) {
+        this.statusEntity = statusEntity;
     }
 
-    public Long getIdUser() {
-        return idUser;
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 }

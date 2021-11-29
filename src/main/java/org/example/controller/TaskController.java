@@ -5,17 +5,18 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
-import org.example.object.Status;
 import org.example.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 @Tag(name="Задачи", description = "Управление задачами")
 @RestController
-@RequestMapping("/task")
+@RequestMapping("/api/task")
 public class TaskController {
     private final TaskService taskService;
 
@@ -56,21 +57,27 @@ public class TaskController {
         System.out.println();
     }
 
-    @Operation(summary = "Изменить задачу по названию")
-    @PutMapping
-    public ResponseEntity<TaskResponseDto> changeByTitle(@RequestBody TaskRequestDto taskRequestDto){
-        return ResponseEntity.ok(taskService.changeByTitle(taskRequestDto));
-    }
-
     @Operation(summary = "Изменить статус задачи")
     @PutMapping("/{id}/status")
-    public ResponseEntity<TaskResponseDto> changeStatus(@PathVariable Long id, @RequestBody Status status){
-        return ResponseEntity.ok(taskService.changeStatus(id, status));
+    public ResponseEntity<TaskResponseDto> changeStatus(@PathVariable Long id, @RequestBody TaskRequestDto taskRequestDto){
+        return ResponseEntity.ok(taskService.changeStatus(id, taskRequestDto));
     }
 
     @Operation(summary = "Получить количество задач, не завершившихся в заданный релиз")
-    @GetMapping("/release")
-    public ResponseEntity<Integer> countAfterDateRelease(){
-        return ResponseEntity.ok(taskService.countAfterDateRelease());
+    @GetMapping("/release/{id}")
+    public ResponseEntity<Integer> countAfterDateRelease(@PathVariable Long id){
+        return ResponseEntity.ok(taskService.countAfterDateAssignedRelease(id));
+    }
+
+    @Operation(summary = "Поиск задач по фильтрам")
+    @PutMapping("/filter")
+    public ResponseEntity<List<TaskResponseDto>> findByFilter(@RequestBody TaskRequestDto taskRequestDto){
+        return ResponseEntity.ok(taskService.findByFilter(taskRequestDto));
+    }
+
+    @Operation(summary = "Создать задачу с помощью CSV-файла")
+    @PostMapping("/file")
+    public ResponseEntity<TaskResponseDto> addViaFile(@RequestPart("multipartFile") MultipartFile multipartFile) throws IOException, ParseException {
+        return ResponseEntity.ok(taskService.readFile(multipartFile));
     }
 }

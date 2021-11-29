@@ -80,42 +80,88 @@ databaseChangeLog:
       id: 000000-add-keys
       author: Strikunova Anastasia
       changes:
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE release ADD CONSTRAINT PK_release PRIMARY KEY (id_release);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE status ADD CONSTRAINT PK_status PRIMARY KEY (id_status);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE userr ADD CONSTRAINT PK_user PRIMARY KEY (id_user);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE project ADD CONSTRAINT PK_project PRIMARY KEY (id_project);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE task ADD CONSTRAINT PK_task PRIMARY KEY (id_task);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE project ADD CONSTRAINT FK_project_0 FOREIGN KEY (id_status) REFERENCES status (id_status);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE project ADD CONSTRAINT FK_project_1 FOREIGN KEY (id_user) REFERENCES userr (id_user);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE task ADD CONSTRAINT FK_task_0 FOREIGN KEY (author) REFERENCES userr (id_user);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE task ADD CONSTRAINT FK_task_1 FOREIGN KEY (performer) REFERENCES userr (id_user);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE task ADD CONSTRAINT FK_task_2 FOREIGN KEY (id_project) REFERENCES project (id_project);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE task ADD CONSTRAINT FK_task_3 FOREIGN KEY (id_status) REFERENCES status (id_status);
-        - sql:
-            dbms: postgresql
-            sql: ALTER TABLE task ADD CONSTRAINT FK_task_4 FOREIGN KEY (id_release) REFERENCES release (id_release);
+        - addPrimaryKey: { columnNames: id_project, constraintName: pk_project, tableName: project }
+        - addPrimaryKey: { columnNames: id_release, constraintName: pk_release, tableName: release }
+        - addPrimaryKey: { columnNames: id_status, constraintName: pk_status, tableName: status }
+        - addPrimaryKey: { columnNames: id_task, constraintName: pk_task, tableName: task }
+        - addPrimaryKey: { columnNames: id_user, constraintName: pk_user, tableName: userr }
+        - addForeignKeyConstraint:
+            baseColumnNames: id_status
+            baseTableName: project
+            constraintName: fk_project_0
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id_status
+            referencedTableName: status
+            referencedTableSchemaName: public
+        - addForeignKeyConstraint:
+            baseColumnNames: id_user
+            baseTableName: project
+            constraintName: fk_project_1
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id_user
+            referencedTableName: userr
+            referencedTableSchemaName: public
+        - addForeignKeyConstraint:
+            baseColumnNames: author
+            baseTableName: task
+            constraintName: fk_task_0
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id_user
+            referencedTableName: userr
+            referencedTableSchemaName: public
+        - addForeignKeyConstraint:
+            baseColumnNames: performer
+            baseTableName: task
+            constraintName: fk_task_1
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id_user
+            referencedTableName: userr
+            referencedTableSchemaName: public
+        - addForeignKeyConstraint:
+            baseColumnNames: id_project
+            baseTableName: task
+            constraintName: fk_task_2
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id_project
+            referencedTableName: project
+            referencedTableSchemaName: public
+        - addForeignKeyConstraint:
+            baseColumnNames: id_status
+            baseTableName: task
+            constraintName: fk_task_3
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id_status
+            referencedTableName: status
+            referencedTableSchemaName: public
+        - addForeignKeyConstraint:
+            baseColumnNames: id_release
+            baseTableName: task
+            constraintName: fk_task_4
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id_release
+            referencedTableName: release
+            referencedTableSchemaName: public
 
   - changeSet:
       id: 000000-add-comments

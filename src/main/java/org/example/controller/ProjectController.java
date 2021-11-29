@@ -12,7 +12,7 @@ import java.util.List;
 
 @Tag(name = "Проекты", description = "Управление проектами")
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/api/project")
 public class ProjectController {
     private final ProjectService projectService;
 
