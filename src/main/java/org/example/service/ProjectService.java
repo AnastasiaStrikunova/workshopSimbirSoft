@@ -16,9 +16,14 @@ public interface ProjectService {
     ProjectResponseDto change(Long id, ProjectRequestDto projectRequestDto);
     void delete(Long id);
 
-    /** Завершение выполнения проекта
+    /** Завершение выполнения проекта. Проект не должен быть закрыт, если хотя бы одна задача на доске не в статусе DONE
      * @param id проекта
      * @return <code>ProjectResponseDto</code>
      */
     ProjectResponseDto completeProject(Long id);
+    /** Старт проекта. Проект может стартовать, только если заказчик произвел оплату
+     * @param id проекта
+     * @return <code>ProjectResponseDto</code>
+     */
+    ProjectResponseDto startProject(Long id);
 }

@@ -3,7 +3,7 @@ package org.example.service.impl;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
-import org.example.Status;
+import org.example.enums.Status;
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
 import org.example.entity.*;
@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static org.example.specification.TaskSpecification.*;
 
@@ -38,6 +37,8 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
 
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
     public TaskServiceImpl(TaskRepository taskRepository, ProjectRepository projectRepository, StatusRepository statusRepository, ReleaseService releaseService) {
         this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
@@ -50,8 +51,7 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponseDto> findAll() {
         List<TaskEntity> taskEntityList = new ArrayList<>(taskRepository.findAll());
         List<TaskResponseDto> taskResponseDtoList = new ArrayList<>();
-        Stream<TaskEntity> stream = taskEntityList.stream();
-        stream.forEach(taskEntity -> taskResponseDtoList.add(taskMapper.TaskEntityToTaskResponseDto(taskEntity)));
+        taskEntityList.forEach(taskEntity -> taskResponseDtoList.add(taskMapper.TaskEntityToTaskResponseDto(taskEntity)));
         return taskResponseDtoList;
     }
 
@@ -107,24 +107,20 @@ public class TaskServiceImpl implements TaskService {
                         String.format("Could not find task with id = %d", id)
                 )
         );
-        String newTitle;
-        Long idStatus;
-        if (taskRequestDto.getStatusEntity().getTitle() != null) {
-            newTitle = taskRequestDto.getStatusEntity().getTitle();
-            idStatus = statusRepository.findByTitle(newTitle).getIdStatus();
-        } else {
-            idStatus = taskRequestDto.getStatusEntity().getIdStatus();
-            newTitle = statusRepository.findById(idStatus).orElseThrow(
-                    () -> new NotFoundException(
-                            String.format("Could not find status with id = %d", idStatus)
-                    )
-            ).getTitle();
+
+        if (taskRequestDto.getIdStatus() == null) {
+            throw new NotFoundException("id_status is null");
         }
+        String newTitle = statusRepository.findById(taskRequestDto.getIdStatus()).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("Could not find status with id = %d", taskRequestDto.getIdStatus())
+                )
+        ).getTitle();
         checkStatus(taskEntity, newTitle);
         taskEntity.setStatusEntity(
-                statusRepository.findById(idStatus).orElseThrow(
+                statusRepository.findById(taskRequestDto.getIdStatus()).orElseThrow(
                         () -> new NotFoundException(
-                                String.format("Could not find status with id = %d", idStatus)
+                                String.format("Could not find status with id = %d", taskRequestDto.getIdStatus())
                         )
                 )
         );
@@ -145,16 +141,17 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TaskResponseDto> findByFilter(TaskRequestDto taskRequestDto) {
-        List<TaskEntity> taskEntityList = new ArrayList<>(taskRepository.findAll(filterByTitle(taskRequestDto.getTitle())
-                .or(filterByPriority(taskRequestDto.getPriority()))
-                //.or(filterByAuthor(taskRequestDto.getAuthorEntity().getIdUser())
-                //.or(filterByPerformer(taskRequestDto.getPerformerEntity().getIdUser()))
-                .or(filterByStartTime(taskRequestDto.getStartTime()))
-                .or(filterByEndTime(taskRequestDto.getEndTime()))
-                //.or(filterByIdProject(taskRequestDto.getProjectEntity().getIdProject()))
-                //.or(filterByIdStatus(taskRequestDto.getStatusEntity().getIdStatus())))
-                //.or(filterByIdRelease(taskRequestDto.getReleaseEntity().getIdRelease()))
+    public List<TaskResponseDto> findByFilter(String title, String priority, Long author, Long performer, Date startTime,
+                                              Date endTime, Long idProject, Long idStatus, Long idRelease) {
+        List<TaskEntity> taskEntityList = new ArrayList<>(taskRepository.findAll(filterByTitle(title)
+                .or(filterByPriority(priority))
+                .or(filterByAuthor(author))
+                .or(filterByPerformer(performer))
+                .or(filterByStartTime(startTime))
+                .or(filterByEndTime(endTime))
+                .or(filterByIdProject(idProject))
+                .or(filterByIdStatus(idStatus))
+                .or(filterByIdRelease(idRelease))
         ));
         List<TaskResponseDto> taskResponseDtoList = new ArrayList<>();
         for (TaskEntity taskEntity : taskEntityList) {
@@ -204,7 +201,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void checkStatus(TaskEntity taskEntity, String newTitle) {
-        if (newTitle.equalsIgnoreCase(Status.IN_PROGRESS.toString())) {
+        if (newTitle.equalsIgnoreCase(Status.IN_PROGRESS.name())) {
             if (taskEntity.getProjectEntity() == null) {
                 throw new NotFoundException(
                         "Unable to change status. The task is not attached to the project"
@@ -215,7 +212,7 @@ public class TaskServiceImpl implements TaskService {
                         "Unable to change status. The project to which the task is attached has no status"
                 );
             }
-            if (taskEntity.getProjectEntity().getStatusEntity().getTitle().equalsIgnoreCase(Status.BACKLOG.toString())) {
+            if (taskEntity.getProjectEntity().getStatusEntity().getTitle().equalsIgnoreCase(Status.BACKLOG.name())) {
                 throw new NotFoundException(
                         String.format("Project with id = %d was created, but did not start", taskEntity.getProjectEntity().getIdProject())
                 );
@@ -232,41 +229,29 @@ public class TaskServiceImpl implements TaskService {
             taskRequestDto.setPriority(map.get("priority"));
         }
         if (map.containsKey("authorEntity/idUser")){
-            UserEntity userEntity = new UserEntity();
-            userEntity.setIdUser(Long.parseLong(map.get("authorEntity/idUser")));
-            taskRequestDto.setAuthorEntity(userEntity);
+            taskRequestDto.setAuthor(Long.parseLong(map.get("authorEntity/idUser")));
         }
         if (map.containsKey("performerEntity/idUser")){
-            UserEntity userEntity = new UserEntity();
-            userEntity.setIdUser(Long.parseLong(map.get("performerEntity/idUser")));
-            taskRequestDto.setPerformerEntity(userEntity);
+            taskRequestDto.setPerformer(Long.parseLong(map.get("performerEntity/idUser")));
         }
         if (map.containsKey("startTime")){
             String startTime = map.get("startTime").substring(0, 19);
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             Date date = formatter.parse(startTime);
             taskRequestDto.setStartTime(date);
         }
         if (map.containsKey("endTime")){
             String endTime = map.get("endTime").substring(0, 19);
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             Date date = formatter.parse(endTime);
             taskRequestDto.setEndTime(date);
         }
         if (map.containsKey("projectEntity/idProject")){
-            ProjectEntity projectEntity = new ProjectEntity();
-            projectEntity.setIdProject(Long.parseLong(map.get("projectEntity/idProject")));
-            taskRequestDto.setProjectEntity(projectEntity);
+            taskRequestDto.setIdProject(Long.parseLong(map.get("projectEntity/idProject")));
         }
         if (map.containsKey("statusEntity/idStatus")){
-            StatusEntity statusEntity = new StatusEntity();
-            statusEntity.setIdStatus(Long.parseLong(map.get("statusEntity/idStatus")));
-            taskRequestDto.setStatusEntity(statusEntity);
+            taskRequestDto.setIdStatus(Long.parseLong(map.get("statusEntity/idStatus")));
         }
         if (map.containsKey("releaseEntity/idRelease")){
-            ReleaseEntity releaseEntity = new ReleaseEntity();
-            releaseEntity.setIdRelease(Long.parseLong(map.get("releaseEntity/idRelease")));
-            taskRequestDto.setReleaseEntity(releaseEntity);
+            taskRequestDto.setIdRelease(Long.parseLong(map.get("releaseEntity/idRelease")));
         }
         return taskRequestDto;
     }

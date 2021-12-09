@@ -12,7 +12,7 @@ import java.util.List;
 
 @Tag(name = "Проекты", description = "Управление проектами")
 @RestController
-@RequestMapping("/api/project")
+@RequestMapping("${api-base-url}/project")
 public class ProjectController {
     private final ProjectService projectService;
 
@@ -51,8 +51,14 @@ public class ProjectController {
     }
 
     @Operation(summary = "Завершить проект")
-    @PutMapping("/isComplete/{id}")
+    @PutMapping("/complete/{id}")
     public ResponseEntity<ProjectResponseDto> completeProject(@PathVariable Long id){
         return ResponseEntity.ok(projectService.completeProject(id));
+    }
+
+    @Operation(summary = "Старт проекта")
+    @PutMapping("/start/{id}")
+    public ResponseEntity<ProjectResponseDto> startProject(@PathVariable Long id){
+        return ResponseEntity.ok(projectService.startProject(id));
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public interface TaskService {
     TaskResponseDto change(Long id, TaskRequestDto taskRequestDto);
     void delete(Long id);
 
-    /** Изменяет статус задачи
+    /** Изменяет статус задачи. Задача может быть в статусе IN_PROGRESS, только когда стартовал проект.
      * @param id айди задачи
      * @param taskRequestDto  тело задачи
      * @return <code>TaskResponseDto</code>
@@ -39,10 +40,16 @@ public interface TaskService {
     Integer countAfterDateAssignedRelease(Long id);
 
     /** Поиск задач по фильтрам
-     * @param taskRequestDto ДТО задачи
      * @return <code>List</code><<code>TaskResponseDto</code>>
      */
-    List<TaskResponseDto> findByFilter(TaskRequestDto taskRequestDto);
+    List<TaskResponseDto> findByFilter(String title, String priority, Long author, Long performer, Date startTime,
+                                       Date endTime, Long idProject, Long idStatus, Long idRelease);
 
+    /** Парсер файла
+     * @param multipartFile файл
+     * @throws IOException
+     * @throws ParseException
+     * @return <code>TaskResponseDto</code>
+     */
     TaskResponseDto readFile(MultipartFile multipartFile) throws IOException, ParseException;
 }

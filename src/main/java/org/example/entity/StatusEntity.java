@@ -20,6 +20,10 @@ public class StatusEntity {
         this.title = title;
     }
 
+    public StatusEntity(Long idStatus) {
+        this.idStatus = idStatus;
+    }
+
     public Long getIdStatus() {
         return idStatus;
     }

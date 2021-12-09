@@ -23,6 +23,10 @@ public class ReleaseEntity {
         this.endTime = endTime;
     }
 
+    public ReleaseEntity(Long idRelease) {
+        this.idRelease = idRelease;
+    }
+
     public Long getIdRelease() {
         return idRelease;
     }

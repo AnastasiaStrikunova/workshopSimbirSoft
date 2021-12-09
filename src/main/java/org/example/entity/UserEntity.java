@@ -21,6 +21,10 @@ public class UserEntity {
         this.priority = priority;
     }
 
+    public UserEntity(Long idUser) {
+        this.idUser = idUser;
+    }
+
     public Long getIdUser() {
         return idUser;
     }

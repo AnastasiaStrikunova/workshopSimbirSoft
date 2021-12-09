@@ -1,26 +1,24 @@
 package org.example.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.example.entity.StatusEntity;
-import org.example.entity.UserEntity;
 
 @Schema(description = "DTO проекта (ответ)")
 public class ProjectResponseDto {
     private Long idProject;
     private String title;
     private Boolean isComplete;
-    private StatusEntity status;
-    private UserEntity user;
+    private Long idStatus;
+    private Long idUser;
 
     public ProjectResponseDto() {
     }
 
-    public ProjectResponseDto(Long idProject, String title, Boolean isComplete, StatusEntity status, UserEntity user) {
+    public ProjectResponseDto(Long idProject, String title, Boolean isComplete, Long idStatus, Long idUser) {
         this.idProject = idProject;
         this.title = title;
         this.isComplete = isComplete;
-        this.status = status;
-        this.user = user;
+        this.idStatus = idStatus;
+        this.idUser = idUser;
     }
 
     public Long getIdProject() {
@@ -47,19 +45,19 @@ public class ProjectResponseDto {
         isComplete = complete;
     }
 
-    public StatusEntity getStatus() {
-        return status;
+    public Long getIdStatus() {
+        return idStatus;
     }
 
-    public void setStatus(StatusEntity status) {
-        this.status = status;
+    public void setIdStatus(Long idStatus) {
+        this.idStatus = idStatus;
     }
 
-    public UserEntity getUser() {
-        return user;
+    public Long getIdUser() {
+        return idUser;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
     }
 }

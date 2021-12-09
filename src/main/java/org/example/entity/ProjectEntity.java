@@ -32,6 +32,10 @@ public class ProjectEntity {
         this.userEntity = userEntity;
     }
 
+    public ProjectEntity(Long idProject) {
+        this.idProject = idProject;
+    }
+
     public Long getIdProject() {
         return idProject;
     }
