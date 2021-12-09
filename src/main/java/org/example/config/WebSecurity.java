@@ -30,7 +30,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/api/auth/login").permitAll()
+                .antMatchers("${api-base-url}/auth/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/*").hasAuthority(Permission.DEVELOPERS_READ.getPermission())
                 .antMatchers(HttpMethod.POST, "/*").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
                 .antMatchers(HttpMethod.DELETE, "/*").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())

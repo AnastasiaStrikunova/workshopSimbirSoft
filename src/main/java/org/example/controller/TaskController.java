@@ -12,11 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 @Tag(name="Задачи", description = "Управление задачами")
 @RestController
-@RequestMapping("/api/task")
+@RequestMapping("${api-base-url}/task")
 public class TaskController {
     private final TaskService taskService;
 
@@ -70,9 +71,11 @@ public class TaskController {
     }
 
     @Operation(summary = "Поиск задач по фильтрам")
-    @PutMapping("/filter")
-    public ResponseEntity<List<TaskResponseDto>> findByFilter(@RequestBody TaskRequestDto taskRequestDto){
-        return ResponseEntity.ok(taskService.findByFilter(taskRequestDto));
+    @GetMapping("/filter")
+    public ResponseEntity<List<TaskResponseDto>> findByFilter(@RequestParam String title, @RequestParam String priority,
+            @RequestParam Long author, @RequestParam Long performer, @RequestParam Date startTime, @RequestParam Date endTime,
+            @RequestParam Long idProject, @RequestParam Long idStatus, @RequestParam Long idRelease){
+        return ResponseEntity.ok(taskService.findByFilter(title, priority, author, performer, startTime, endTime, idProject, idStatus, idRelease));
     }
 
     @Operation(summary = "Создать задачу с помощью CSV-файла")

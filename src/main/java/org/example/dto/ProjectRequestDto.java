@@ -1,24 +1,22 @@
 package org.example.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.example.entity.StatusEntity;
-import org.example.entity.UserEntity;
 
 @Schema(description = "DTO проекта (запрос)")
 public class ProjectRequestDto {
     private String title;
     private Boolean isComplete;
-    private StatusEntity statusEntity;
-    private UserEntity userEntity;
+    private Long idStatus;
+    private Long idUser;
 
     public ProjectRequestDto() {
     }
 
-    public ProjectRequestDto(String title, Boolean isComplete, StatusEntity statusEntity, UserEntity userEntity) {
+    public ProjectRequestDto(String title, Boolean isComplete, Long idStatus, Long idUser) {
         this.title = title;
         this.isComplete = isComplete;
-        this.statusEntity = statusEntity;
-        this.userEntity = userEntity;
+        this.idStatus = idStatus;
+        this.idUser = idUser;
     }
 
     public String getTitle() {
@@ -37,19 +35,19 @@ public class ProjectRequestDto {
         isComplete = complete;
     }
 
-    public StatusEntity getStatusEntity() {
-        return statusEntity;
+    public Long getIdStatus() {
+        return idStatus;
     }
 
-    public void setStatusEntity(StatusEntity statusEntity) {
-        this.statusEntity = statusEntity;
+    public void setIdStatus(Long idStatus) {
+        this.idStatus = idStatus;
     }
 
-    public UserEntity getUserEntity() {
-        return userEntity;
+    public Long getIdUser() {
+        return idUser;
     }
 
-    public void setUserEntity(UserEntity userEntity) {
-        this.userEntity = userEntity;
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
     }
 }

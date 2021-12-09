@@ -12,7 +12,7 @@ import java.util.List;
 
 @Tag(name = "Релизы", description = "Управление релизами")
 @RestController
-@RequestMapping("/api/release")
+@RequestMapping("${api-base-url}/release")
 public class ReleaseController {
     private final ReleaseService releaseService;
 

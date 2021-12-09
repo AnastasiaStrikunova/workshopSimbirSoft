@@ -1,13 +1,17 @@
 package org.example.service.impl;
 
-import org.example.Status;
+import org.example.entity.UserEntity;
+import org.example.enums.Status;
 import org.example.dto.ProjectRequestDto;
 import org.example.dto.ProjectResponseDto;
 import org.example.entity.ProjectEntity;
+import org.example.entity.StatusEntity;
 import org.example.entity.TaskEntity;
 import org.example.exception.NotFoundException;
 import org.example.mapper.ProjectMapper;
+import org.example.proxy.PaymentClient;
 import org.example.repository.ProjectRepository;
+import org.example.repository.StatusRepository;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.mapstruct.factory.Mappers;
@@ -16,19 +20,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
+    private final StatusRepository statusRepository;
 
     private final TaskService taskService;
 
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService) {
+    private final PaymentClient paymentClient;
+
+    public ProjectServiceImpl(ProjectRepository projectRepository, StatusRepository statusRepository, TaskService taskService, PaymentClient paymentClient) {
         this.projectRepository = projectRepository;
+        this.statusRepository = statusRepository;
         this.taskService = taskService;
+        this.paymentClient = paymentClient;
     }
 
     @Override
@@ -36,8 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
     public List<ProjectResponseDto> findAll() {
         List<ProjectEntity> projectEntityList = new ArrayList<>(projectRepository.findAll());
         List<ProjectResponseDto> projectResponseDtoList = new ArrayList<>();
-        Stream<ProjectEntity> stream = projectEntityList.stream();
-        stream.forEach(projectEntity -> projectResponseDtoList.add(projectMapper.ProjectEntityToProjectResponseDto(projectEntity)));
+        projectEntityList.forEach(projectEntity -> projectResponseDtoList.add(projectMapper.ProjectEntityToProjectResponseDto(projectEntity)));
         return projectResponseDtoList;
     }
 
@@ -71,8 +78,8 @@ public class ProjectServiceImpl implements ProjectService {
         );
         if (projectRequestDto.getTitle() != null) projectEntity.setTitle(projectRequestDto.getTitle());
         if (projectRequestDto.getComplete() != null) projectEntity.setComplete(projectRequestDto.getComplete());
-        if (projectRequestDto.getStatusEntity() != null) projectEntity.setStatusEntity(projectRequestDto.getStatusEntity());
-        if (projectRequestDto.getUserEntity() != null) projectEntity.setUserEntity(projectRequestDto.getUserEntity());
+        if (projectRequestDto.getIdStatus() != null) projectEntity.setStatusEntity(new StatusEntity(projectRequestDto.getIdStatus()));
+        if (projectRequestDto.getIdUser() != null) projectEntity.setUserEntity(new UserEntity(projectRequestDto.getIdUser()));
         return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
     }
 
@@ -103,14 +110,43 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
     }
 
+    @Override
+    public ProjectResponseDto startProject(Long id) {
+        ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("Could not find project with id = %d", id)
+                )
+        );
+        checkPayment(id);
+        StatusEntity statusEntity;
+        if (statusRepository.findByTitle(Status.START.name()) != null) {
+            statusEntity = statusRepository.findByTitle(Status.START.name());
+        } else {
+            statusEntity = new StatusEntity();
+            statusEntity.setTitle(Status.START.name());
+            statusRepository.save(statusEntity);
+        }
+        projectEntity.setStatusEntity(statusEntity);
+        projectRepository.save(projectEntity);
+        return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
+    }
+
     private void checkTaskStatus(TaskEntity taskEntity) {
         if (taskEntity.getStatusEntity() == null) {
             throw new NotFoundException(
                     "The task has no status assigned"
             );
-        } else if (!taskEntity.getStatusEntity().getTitle().equalsIgnoreCase(Status.DONE.toString())) {
+        } else if (!taskEntity.getStatusEntity().getTitle().equalsIgnoreCase(Status.DONE.name())) {
             throw new NotFoundException(
                     "The project cannot be completed because it has unfinished tasks"
+            );
+        }
+    }
+
+    private void checkPayment(Long id) {
+        if (Boolean.FALSE.equals(paymentClient.isPaid(id).getBody())) {
+            throw new NotFoundException(
+                    "The project cannot start because the customer has not paid"
             );
         }
     }

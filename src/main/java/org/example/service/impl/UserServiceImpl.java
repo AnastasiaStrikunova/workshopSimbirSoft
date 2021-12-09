@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,8 +29,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDto> findAll() {
         List<UserEntity> userEntityList = new ArrayList<>(userRepository.findAll());
         List<UserResponseDto> userResponseDtoList = new ArrayList<>();
-        Stream<UserEntity> stream = userEntityList.stream();
-        stream.forEach(userEntity -> userResponseDtoList.add(userMapper.UserEntityToUserResponseDto(userEntity)));
+        userEntityList.forEach(userEntity -> userResponseDtoList.add(userMapper.UserEntityToUserResponseDto(userEntity)));
         return userResponseDtoList;
     }
 

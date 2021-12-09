@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class ReleaseServiceImpl implements ReleaseService {
@@ -29,8 +28,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     public List<ReleaseResponseDto> findAll() {
         List<ReleaseEntity> releaseEntityList = new ArrayList<>(releaseRepository.findAll());
         List<ReleaseResponseDto> releaseResponseDtoList = new ArrayList<>();
-        Stream<ReleaseEntity> stream = releaseEntityList.stream();
-        stream.forEach(releaseEntity -> releaseResponseDtoList.add(releaseMapper.ReleaseEntityToReleaseResponseDto(releaseEntity)));
+        releaseEntityList.forEach(releaseEntity -> releaseResponseDtoList.add(releaseMapper.ReleaseEntityToReleaseResponseDto(releaseEntity)));
         return releaseResponseDtoList;
     }
 
