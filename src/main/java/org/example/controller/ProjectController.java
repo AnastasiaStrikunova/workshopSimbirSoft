@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.ProjectRequestDto;
 import org.example.dto.ProjectResponseDto;
@@ -13,6 +14,7 @@ import java.util.List;
 @Tag(name = "Проекты", description = "Управление проектами")
 @RestController
 @RequestMapping("${api-base-url}/project")
+@SecurityRequirement(name = "bearerAuth")
 public class ProjectController {
     private final ProjectService projectService;
 

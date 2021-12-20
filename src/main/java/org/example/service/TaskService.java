@@ -23,10 +23,10 @@ public interface TaskService {
 
     /** Изменяет статус задачи. Задача может быть в статусе IN_PROGRESS, только когда стартовал проект.
      * @param id айди задачи
-     * @param taskRequestDto  тело задачи
+     * @param idStatus  id статуса
      * @return <code>TaskResponseDto</code>
      */
-    TaskResponseDto changeStatus(Long id, TaskRequestDto taskRequestDto);
+    TaskResponseDto changeStatus(Long id, Long idStatus);
 
     /** Возвращает все задачи заданного проекта
      * @param id айди проекта
@@ -42,8 +42,7 @@ public interface TaskService {
     /** Поиск задач по фильтрам
      * @return <code>List</code><<code>TaskResponseDto</code>>
      */
-    List<TaskResponseDto> findByFilter(String title, String priority, Long author, Long performer, Date startTime,
-                                       Date endTime, Long idProject, Long idStatus, Long idRelease);
+    List<TaskResponseDto> findByFilter(TaskRequestDto taskRequestDto);
 
     /** Парсер файла
      * @param multipartFile файл

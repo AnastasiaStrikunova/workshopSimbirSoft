@@ -1,0 +1,2 @@
+idTask,title,priority,authorEntity/idUser,authorEntity/name,authorEntity/priority,performerEntity/idUser,performerEntity/name,performerEntity/priority,projectEntity/idProject,projectEntity/title,projectEntity/statusEntity/idStatus,projectEntity/statusEntity/title,projectEntity/userEntity/idUser,projectEntity/userEntity/name,projectEntity/userEntity/priority,projectEntity/complete,statusEntity/idStatus,statusEntity/title,releaseEntity/idRelease,releaseEntity/version
+1,task1,1,1,user,1,1,user,1,1,qwe,1,backlog,1,user,1,true,3,done,1,1

@@ -13,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Service
 public class ReleaseServiceImpl implements ReleaseService {
     private final ReleaseRepository releaseRepository;
     private final ReleaseMapper releaseMapper = Mappers.getMapper(ReleaseMapper.class);
+    private final ResourceBundle resourceBundle = ResourceBundle.getBundle("myApp");
 
     public ReleaseServiceImpl(ReleaseRepository releaseRepository) {
         this.releaseRepository = releaseRepository;
@@ -38,7 +40,7 @@ public class ReleaseServiceImpl implements ReleaseService {
         return releaseMapper.ReleaseEntityToReleaseResponseDto(
                 releaseRepository.findById(id).orElseThrow(
                         () -> new NotFoundException(
-                                String.format("Could not find release with id = %d", id)
+                                String.format(resourceBundle.getString("exceptionReleaseNotExist"), id)
                         )
                 )
         );
@@ -48,8 +50,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Transactional
     public ReleaseResponseDto add(ReleaseRequestDto releaseRequestDto) {
         ReleaseEntity releaseEntity = releaseMapper.ReleaseRequestDtoToReleaseEntity(releaseRequestDto);
-        releaseRepository.save(releaseEntity);
-        return releaseMapper.ReleaseEntityToReleaseResponseDto(releaseEntity);
+        return releaseMapper.ReleaseEntityToReleaseResponseDto(releaseRepository.save(releaseEntity));
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     public ReleaseResponseDto change(Long id, ReleaseRequestDto releaseRequestDto) {
         ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find release with id = %d", id)
+                        String.format(resourceBundle.getString("exceptionReleaseNotExist"), id)
                 )
         );
         if (releaseRequestDto.getVersion() != null) releaseEntity.setVersion(releaseRequestDto.getVersion());
@@ -71,7 +72,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     public void delete(Long id) {
         ReleaseEntity releaseEntity = releaseRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find release with id = %d", id)
+                        String.format(resourceBundle.getString("exceptionReleaseNotExist"), id)
                 )
         );
         releaseRepository.delete(releaseEntity);

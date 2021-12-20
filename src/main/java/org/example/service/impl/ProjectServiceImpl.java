@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -31,6 +32,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
 
     private final PaymentClient paymentClient;
+
+    private final ResourceBundle resourceBundle = ResourceBundle.getBundle("myApp");
 
     public ProjectServiceImpl(ProjectRepository projectRepository, StatusRepository statusRepository, TaskService taskService, PaymentClient paymentClient) {
         this.projectRepository = projectRepository;
@@ -54,7 +57,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.ProjectEntityToProjectResponseDto(
                 projectRepository.findById(id).orElseThrow(
                         () -> new NotFoundException(
-                                String.format("Could not find project with id = %d", id)
+                                String.format(resourceBundle.getString("exceptionProjectNotExist"), id)
                         )
                 )
         );
@@ -73,7 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponseDto change(Long id, ProjectRequestDto projectRequestDto) {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find project with id = %d", id)
+                        String.format(resourceBundle.getString("exceptionProjectNotExist"), id)
                 )
         );
         if (projectRequestDto.getTitle() != null) projectEntity.setTitle(projectRequestDto.getTitle());
@@ -88,7 +91,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void delete(Long id) {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find project with id = %d", id)
+                        String.format(resourceBundle.getString("exceptionProjectNotExist"), id)
                 )
         );
         projectRepository.delete(projectEntity);
@@ -99,13 +102,11 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponseDto completeProject(Long id) {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find project with id = %d", id)
+                        String.format(resourceBundle.getString("exceptionProjectNotExist"), id)
                 )
         );
         List<TaskEntity> taskEntityList = taskService.findAllByIdProject(id);
-        for (TaskEntity taskEntity : taskEntityList) {
-            checkTaskStatus(taskEntity);
-        }
+        taskEntityList.forEach(this::checkTaskStatus);
         projectEntity.setComplete(true);
         return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
     }
@@ -114,7 +115,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponseDto startProject(Long id) {
         ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find project with id = %d", id)
+                        String.format(resourceBundle.getString("exceptionProjectNotExist"), id)
                 )
         );
         checkPayment(id);
@@ -134,11 +135,11 @@ public class ProjectServiceImpl implements ProjectService {
     private void checkTaskStatus(TaskEntity taskEntity) {
         if (taskEntity.getStatusEntity() == null) {
             throw new NotFoundException(
-                    "The task has no status assigned"
+                    resourceBundle.getString("exceptionProjectNoStatus")
             );
         } else if (!taskEntity.getStatusEntity().getTitle().equalsIgnoreCase(Status.DONE.name())) {
             throw new NotFoundException(
-                    "The project cannot be completed because it has unfinished tasks"
+                    resourceBundle.getString("exceptionProjectUnfinishedTasks")
             );
         }
     }
@@ -146,7 +147,7 @@ public class ProjectServiceImpl implements ProjectService {
     private void checkPayment(Long id) {
         if (Boolean.FALSE.equals(paymentClient.isPaid(id).getBody())) {
             throw new NotFoundException(
-                    "The project cannot start because the customer has not paid"
+                    resourceBundle.getString("exceptionProjectNotPaid")
             );
         }
     }

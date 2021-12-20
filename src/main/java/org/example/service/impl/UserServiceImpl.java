@@ -13,12 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+
+    private final ResourceBundle resourceBundle = ResourceBundle.getBundle("myApp");
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -39,7 +42,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.UserEntityToUserResponseDto(
                 userRepository.findById(id).orElseThrow(
                         () -> new NotFoundException(
-                                String.format("Could not find user with id = %d", id)
+                                String.format(resourceBundle.getString("exceptionUserNotExist"), id)
                         )
                 )
         );
@@ -49,8 +52,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponseDto add(UserRequestDto userRequestDto) {
         UserEntity userEntity = userMapper.UserRequestDtoToUserEntity(userRequestDto);
-        userRepository.save(userEntity);
-        return userMapper.UserEntityToUserResponseDto(userEntity);
+        return userMapper.UserEntityToUserResponseDto(userRepository.save(userEntity));
     }
 
     @Override
@@ -58,7 +60,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto change(Long id, UserRequestDto userRequestDto) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find user with id = %d", id)
+                        String.format(resourceBundle.getString("exceptionUserNotExist"), id)
                 )
         );
         if (userRequestDto.getName() != null) userEntity.setName(userRequestDto.getName());
@@ -71,7 +73,7 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
-                        String.format("Could not find user with id = %d", id)
+                        String.format(resourceBundle.getString("exceptionUserNotExist"), id)
                 )
         );
         userRepository.delete(userEntity);
