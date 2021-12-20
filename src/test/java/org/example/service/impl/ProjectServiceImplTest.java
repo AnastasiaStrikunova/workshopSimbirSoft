@@ -71,7 +71,6 @@ public class ProjectServiceImplTest {
     @Test
     public void change() {
         Mockito.when(projectRepository.findById(Mockito.any())).thenReturn(Optional.of(projectEntity1));
-        Mockito.when(projectRepository.save(Mockito.any())).thenReturn(projectEntity1);
         var actual = projectService.change(projectEntity1.getIdProject(), new ProjectRequestDto());
         Assert.assertEquals(projectMapper.ProjectEntityToProjectResponseDto(projectEntity1), actual);
     }

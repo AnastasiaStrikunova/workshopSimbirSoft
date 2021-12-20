@@ -118,11 +118,9 @@ public class TaskControllerTest {
 
     @Test
     public void changeStatus() throws Exception {
-        TaskRequestDto taskRequestDto = new TaskRequestDto();
-        taskRequestDto.setIdStatus(idStatus);
         String body = mockMvc.perform(MockMvcRequestBuilders.put(apiBaseUrl + "/task/" + idStartTask + "/status")
                         .contentType(MediaType.APPLICATION_JSON).header("Authorization", token)
-                        .content(objectMapper.writeValueAsString(taskRequestDto)))
+                        .param("idStatus", String.valueOf(idStatus)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.idStatus").value(idStatus))
                 .andReturn().getResponse().getContentAsString();

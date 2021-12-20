@@ -80,7 +80,13 @@ public class ProjectServiceImpl implements ProjectService {
                 )
         );
         if (projectRequestDto.getTitle() != null) projectEntity.setTitle(projectRequestDto.getTitle());
-        if (projectRequestDto.getComplete() != null) projectEntity.setComplete(projectRequestDto.getComplete());
+        if (projectRequestDto.getComplete() != null) {
+            if (projectRequestDto.getComplete()) {
+                completeProject(id);
+            } else {
+                projectEntity.setComplete(false);
+            }
+        }
         if (projectRequestDto.getIdStatus() != null) projectEntity.setStatusEntity(new StatusEntity(projectRequestDto.getIdStatus()));
         if (projectRequestDto.getIdUser() != null) projectEntity.setUserEntity(new UserEntity(projectRequestDto.getIdUser()));
         return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
