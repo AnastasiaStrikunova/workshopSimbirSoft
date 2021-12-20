@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 000003-create-sequence--in-users
+      author: Strikunova Anastasia
+      changes:
+        - createSequence:
+            cycle: false
+            sequenceName: seq_users
+            startValue: 1
+            incrementBy: 1
+            dataType: bigint
+            maxValue: 9223372036854775807
+            minValue: 1

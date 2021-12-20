@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - changeSet:
+      id: 000002-add-primaryKey-in-users
+      author: Strikunova Anastasia
+      changes:
+        - addPrimaryKey: { columnNames: id_users, constraintName: pk_users, tableName: users }
