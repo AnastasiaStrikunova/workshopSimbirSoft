@@ -3,6 +3,7 @@ package org.example.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Schema(description = "DTO задачи (ответ)")
 public class TaskResponseDto {
@@ -110,5 +111,34 @@ public class TaskResponseDto {
 
     public void setIdRelease(Long idRelease) {
         this.idRelease = idRelease;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskResponseDto that = (TaskResponseDto) o;
+        return Objects.equals(getIdTask(), that.getIdTask()) && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getPriority(), that.getPriority()) && Objects.equals(getAuthor(), that.getAuthor()) && Objects.equals(getPerformer(), that.getPerformer()) && Objects.equals(getStartTime(), that.getStartTime()) && Objects.equals(getEndTime(), that.getEndTime()) && Objects.equals(getIdProject(), that.getIdProject()) && Objects.equals(getIdStatus(), that.getIdStatus()) && Objects.equals(getIdRelease(), that.getIdRelease());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdTask(), getTitle(), getPriority(), getAuthor(), getPerformer(), getStartTime(), getEndTime(), getIdProject(), getIdStatus(), getIdRelease());
+    }
+
+    @Override
+    public String toString() {
+        return "TaskResponseDto{" +
+                "idTask=" + idTask +
+                ", title='" + title + '\'' +
+                ", priority='" + priority + '\'' +
+                ", author=" + author +
+                ", performer=" + performer +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", idProject=" + idProject +
+                ", idStatus=" + idStatus +
+                ", idRelease=" + idRelease +
+                '}';
     }
 }

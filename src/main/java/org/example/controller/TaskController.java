@@ -2,6 +2,7 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
@@ -18,6 +19,7 @@ import java.util.List;
 @Tag(name="Задачи", description = "Управление задачами")
 @RestController
 @RequestMapping("${api-base-url}/task")
+@SecurityRequirement(name = "bearerAuth")
 public class TaskController {
     private final TaskService taskService;
 
@@ -60,8 +62,8 @@ public class TaskController {
 
     @Operation(summary = "Изменить статус задачи")
     @PutMapping("/{id}/status")
-    public ResponseEntity<TaskResponseDto> changeStatus(@PathVariable Long id, @RequestBody TaskRequestDto taskRequestDto){
-        return ResponseEntity.ok(taskService.changeStatus(id, taskRequestDto));
+    public ResponseEntity<TaskResponseDto> changeStatus(@PathVariable Long id, @RequestParam Long idStatus){
+        return ResponseEntity.ok(taskService.changeStatus(id, idStatus));
     }
 
     @Operation(summary = "Получить количество задач, не завершившихся в заданный релиз")
@@ -71,11 +73,9 @@ public class TaskController {
     }
 
     @Operation(summary = "Поиск задач по фильтрам")
-    @GetMapping("/filter")
-    public ResponseEntity<List<TaskResponseDto>> findByFilter(@RequestParam String title, @RequestParam String priority,
-            @RequestParam Long author, @RequestParam Long performer, @RequestParam Date startTime, @RequestParam Date endTime,
-            @RequestParam Long idProject, @RequestParam Long idStatus, @RequestParam Long idRelease){
-        return ResponseEntity.ok(taskService.findByFilter(title, priority, author, performer, startTime, endTime, idProject, idStatus, idRelease));
+    @PostMapping("/filter")
+    public ResponseEntity<List<TaskResponseDto>> findByFilter(@RequestBody TaskRequestDto taskRequestDto){
+        return ResponseEntity.ok(taskService.findByFilter(taskRequestDto));
     }
 
     @Operation(summary = "Создать задачу с помощью CSV-файла")

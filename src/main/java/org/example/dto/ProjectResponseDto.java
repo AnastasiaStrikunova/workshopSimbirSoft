@@ -2,6 +2,8 @@ package org.example.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.Objects;
+
 @Schema(description = "DTO проекта (ответ)")
 public class ProjectResponseDto {
     private Long idProject;
@@ -59,5 +61,18 @@ public class ProjectResponseDto {
 
     public void setIdUser(Long idUser) {
         this.idUser = idUser;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProjectResponseDto that = (ProjectResponseDto) o;
+        return Objects.equals(getIdProject(), that.getIdProject()) && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(isComplete, that.isComplete) && Objects.equals(getIdStatus(), that.getIdStatus()) && Objects.equals(getIdUser(), that.getIdUser());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdProject(), getTitle(), isComplete, getIdStatus(), getIdUser());
     }
 }

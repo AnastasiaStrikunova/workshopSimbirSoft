@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.UserRequestDto;
 import org.example.dto.UserResponseDto;
@@ -13,6 +14,7 @@ import java.util.List;
 @Tag(name = "Пользователи", description = "Управление пользователями")
 @RestController
 @RequestMapping("${api-base-url}/user")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final UserService userService;
 

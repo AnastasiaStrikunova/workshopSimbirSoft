@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.dto.ReleaseRequestDto;
 import org.example.dto.ReleaseResponseDto;
@@ -13,6 +14,7 @@ import java.util.List;
 @Tag(name = "Релизы", description = "Управление релизами")
 @RestController
 @RequestMapping("${api-base-url}/release")
+@SecurityRequirement(name = "bearerAuth")
 public class ReleaseController {
     private final ReleaseService releaseService;
 

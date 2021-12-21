@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.security.entity.User;
 import org.example.dto.AuthenticationRequestDto;
 import org.example.repository.UsersRepository;
@@ -21,19 +23,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+@Tag(name = "Аутентификация")
 @RestController
 @RequestMapping("${api-base-url}/auth")
-public class AuthenticationRestController {
+public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final UsersRepository usersRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthenticationRestController(AuthenticationManager authenticationManager, UsersRepository usersRepository, JwtTokenProvider jwtTokenProvider) {
+    public AuthenticationController(AuthenticationManager authenticationManager, UsersRepository usersRepository, JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.usersRepository = usersRepository;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Operation(summary = "Получить токен")
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDto request) {
         try {
