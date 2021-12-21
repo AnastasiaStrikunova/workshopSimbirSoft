@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Service
@@ -79,16 +80,16 @@ public class ProjectServiceImpl implements ProjectService {
                         String.format(resourceBundle.getString("exceptionProjectNotExist"), id)
                 )
         );
-        if (projectRequestDto.getTitle() != null) projectEntity.setTitle(projectRequestDto.getTitle());
-        if (projectRequestDto.getComplete() != null) {
-            if (projectRequestDto.getComplete()) {
+        Optional.ofNullable(projectRequestDto.getTitle()).ifPresent(projectEntity::setTitle);
+        Optional.ofNullable(projectRequestDto.getComplete()).ifPresent(isComplete -> {
+            if (isComplete) {
                 completeProject(id);
             } else {
                 projectEntity.setComplete(false);
             }
-        }
-        if (projectRequestDto.getIdStatus() != null) projectEntity.setStatusEntity(new StatusEntity(projectRequestDto.getIdStatus()));
-        if (projectRequestDto.getIdUser() != null) projectEntity.setUserEntity(new UserEntity(projectRequestDto.getIdUser()));
+        });
+        Optional.ofNullable(projectRequestDto.getIdStatus()).ifPresent(idStatus -> projectEntity.setStatusEntity(new StatusEntity(idStatus)));
+        Optional.ofNullable(projectRequestDto.getIdUser()).ifPresent(idUser -> projectEntity.setUserEntity(new UserEntity(idUser)));
         return projectMapper.ProjectEntityToProjectResponseDto(projectEntity);
     }
 

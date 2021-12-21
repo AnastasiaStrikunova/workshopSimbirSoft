@@ -158,19 +158,19 @@ public class TaskServiceImpl implements TaskService {
             list.add(csvRecord.toList());
         }
         Map<String, String> map = new HashMap<>();
-        list.get(0).stream().forEach(s -> map.put(s, list.get(1).get(list.get(0).indexOf(s))));
+        list.get(0).forEach(s -> map.put(s, list.get(1).get(list.get(0).indexOf(s))));
         return add(mapToTaskRequestDto(map));
     }
 
     private TaskEntity setFieldsTaskEntity(TaskEntity updatedEntity, TaskEntity sourceTaskEntity) {
-        if (updatedEntity.getTitle() != null) sourceTaskEntity.setTitle(updatedEntity.getTitle());
-        if (updatedEntity.getPriority() != null) sourceTaskEntity.setPriority(updatedEntity.getPriority());
-        if (updatedEntity.getAuthorEntity() != null) sourceTaskEntity.setAuthorEntity(updatedEntity.getAuthorEntity());
-        if (updatedEntity.getPerformerEntity() != null) sourceTaskEntity.setPerformerEntity(updatedEntity.getPerformerEntity());
-        if (updatedEntity.getStartTime() != null) sourceTaskEntity.setStartTime(updatedEntity.getStartTime());
-        if (updatedEntity.getEndTime() != null) sourceTaskEntity.setEndTime(updatedEntity.getEndTime());
-        if (updatedEntity.getProjectEntity() != null) {
-            ProjectEntity projectEntity = projectRepository.findById(updatedEntity.getProjectEntity().getIdProject()).orElseThrow(
+        Optional.ofNullable(updatedEntity.getTitle()).ifPresent(sourceTaskEntity::setTitle);
+        Optional.ofNullable(updatedEntity.getPriority()).ifPresent(sourceTaskEntity::setPriority);
+        Optional.ofNullable(updatedEntity.getAuthorEntity()).ifPresent(sourceTaskEntity::setAuthorEntity);
+        Optional.ofNullable(updatedEntity.getPerformerEntity()).ifPresent(sourceTaskEntity::setPerformerEntity);
+        Optional.ofNullable(updatedEntity.getStartTime()).ifPresent(sourceTaskEntity::setStartTime);
+        Optional.ofNullable(updatedEntity.getEndTime()).ifPresent(sourceTaskEntity::setEndTime);
+        Optional.ofNullable(updatedEntity.getProjectEntity()).ifPresent(project -> {
+            ProjectEntity projectEntity = projectRepository.findById(project.getIdProject()).orElseThrow(
                     () -> new NotFoundException(
                             String.format(resourceBundle.getString("exceptionProjectNotExist"), updatedEntity.getProjectEntity().getIdProject())
                     )
@@ -182,9 +182,9 @@ public class TaskServiceImpl implements TaskService {
                         String.format(resourceBundle.getString("exceptionTaskProjectCompleted"), projectEntity.getIdProject())
                 );
             }
-        }
-        if (updatedEntity.getStatusEntity() != null) changeStatus(sourceTaskEntity.getIdTask(), updatedEntity.getStatusEntity().getIdStatus());
-        if (updatedEntity.getReleaseEntity() != null) sourceTaskEntity.setReleaseEntity(updatedEntity.getReleaseEntity());
+        });
+        Optional.ofNullable(updatedEntity.getStatusEntity()).ifPresent(status -> changeStatus(sourceTaskEntity.getIdTask(), status.getIdStatus()));
+        Optional.ofNullable(updatedEntity.getReleaseEntity()).ifPresent(sourceTaskEntity::setReleaseEntity);
         return sourceTaskEntity;
     }
 

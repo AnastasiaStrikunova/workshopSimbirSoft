@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Service
@@ -63,8 +64,8 @@ public class UserServiceImpl implements UserService {
                         String.format(resourceBundle.getString("exceptionUserNotExist"), id)
                 )
         );
-        if (userRequestDto.getName() != null) userEntity.setName(userRequestDto.getName());
-        if (userRequestDto.getPriority() != null) userEntity.setPriority(userRequestDto.getPriority());
+        Optional.ofNullable(userRequestDto.getName()).ifPresent(userEntity::setName);
+        Optional.ofNullable(userRequestDto.getPriority()).ifPresent(userEntity::setPriority);
         return userMapper.UserEntityToUserResponseDto(userEntity);
     }
 

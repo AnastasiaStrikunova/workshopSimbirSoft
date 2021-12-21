@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Service
@@ -61,9 +62,9 @@ public class ReleaseServiceImpl implements ReleaseService {
                         String.format(resourceBundle.getString("exceptionReleaseNotExist"), id)
                 )
         );
-        if (releaseRequestDto.getVersion() != null) releaseEntity.setVersion(releaseRequestDto.getVersion());
-        if (releaseRequestDto.getStartTime() != null) releaseEntity.setStartTime(releaseRequestDto.getStartTime());
-        if (releaseRequestDto.getEndTime() != null) releaseEntity.setEndTime(releaseRequestDto.getEndTime());
+        Optional.ofNullable(releaseRequestDto.getVersion()).ifPresent(releaseEntity::setVersion);
+        Optional.ofNullable(releaseRequestDto.getStartTime()).ifPresent(releaseEntity::setStartTime);
+        Optional.ofNullable(releaseRequestDto.getEndTime()).ifPresent(releaseEntity::setEndTime);
         return releaseMapper.ReleaseEntityToReleaseResponseDto(releaseEntity);
     }
 
